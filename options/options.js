@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    var apiKeyInput = document.getElementById('api-key');
+    var apiKeyInput = document.getElementById('api-key-input');
     chrome.storage.sync.get('openaiApiKey', function (data) {
         apiKeyInput.value = data.openaiApiKey || '';
     });
