@@ -1,64 +1,80 @@
 // Texte selectionné actualisé en temps réel
 var selectedText = '';
 // Fonction pour construire les requettes en fonction du mode (context menu option)
-function createRequest(mode, selectedText) {
-  let request;
-  
+function createRequest(mode, selectedText, lang, aiVersion) {
+  let messages = [];
+
   switch (mode) {
     case 1:
-      request = {
-        model: "gpt-3.5-turbo",
-        messages: [
-          {"role": "system", "content": "Tu es un assistant qui parle français. Tu es pédagogue et tu prends ton temps pour expliquer."},
-          {"role": "user", "content": "J'ai besoin d'une explication précise, je ne comprends pas quelquechose."},
-          {"role": "assistant", "content": "Oui, bien sûr. Qu'est-ce que tu veux que je t'explique ?"},
-          {"role": "assistant", "content": "Explique-moi ceci : " + selectedText}
-        ]
-      };
+      if (lang === "fr") {
+        messages.push({"role": "system", "content": "Tu es un assistant qui parle français. Tu es pédagogue et tu prends ton temps pour expliquer."});
+        messages.push({"role": "user", "content": "J'ai besoin d'une explication précise, je ne comprends pas quelque chose."});
+        messages.push({"role": "assistant", "content": "Oui, bien sûr. Qu'est-ce que tu veux que je t'explique ?"});
+        messages.push({"role": "assistant", "content": "Explique-moi ceci : " + selectedText + ".f"});
+      } else if (lang === "en") {
+        messages.push({"role": "system", "content": "You are an assistant who speaks English. You are pedagogical and take your time to explain."});
+        messages.push({"role": "user", "content": "I need a precise explanation, I don't understand something."});
+        messages.push({"role": "assistant", "content": "Yes, of course. What do you want me to explain to you?"});
+        messages.push({"role": "assistant", "content": "Explain this to me: " + selectedText + ".e"});
+      }
       break;
     case 2:
-      request = {
-        model: "gpt-3.5-turbo",
-        messages: [
-          {"role": "system", "content": "Tu es un assistant qui parle français. Tu as un esprit de synthèse exceptionnel et tu arrive à résumer en prenant ton temps mais sans oublier aucun détail."},
-          {"role": "user", "content": "J'ai besoin d'un résumé précis."},
-          {"role": "assistant", "content": "Oui, bien sûr. Qu'est-ce que tu veux que je te résume ?"},
-          {"role": "user", "content": "Résume-moi : " + selectedText}
-        ]
-      };
+      if (lang === "fr") {
+        messages.push({"role": "system", "content": "Tu es un assistant qui parle français. Tu as un esprit de synthèse exceptionnel et tu arrives à résumer en prenant ton temps mais sans oublier aucun détail."});
+        messages.push({"role": "user", "content": "J'ai besoin d'un résumé précis."});
+        messages.push({"role": "assistant", "content": "Oui, bien sûr. Qu'est-ce que tu veux que je te résume ?"});
+        messages.push({"role": "user", "content": "Résume-moi : " + selectedText + ".f"});
+      } else if (lang === "en") {
+        messages.push({"role": "system", "content": "You are an assistant who speaks English. You have an exceptional synthesis mind and can summarize by taking your time but without forgetting any detail."});
+        messages.push({"role": "user", "content": "I need a precise summary."});
+        messages.push({"role": "assistant", "content": "Yes, of course. What do you want me to summarize for you?"});
+        messages.push({"role": "user", "content": "Summarize this for me: " + selectedText + ".e"});
+      }
       break;
     case 3:
-      request = {
-        model: "gpt-3.5-turbo",
-        messages: [
-          {"role": "system", "content": "Tu es un assistant qui parle français. Tu es pédagogue et tu prends ton temps pour expliquer étape après étape."},
-          {"role": "user", "content": "J'ai besoin d'une solution à ce problème. Explique moi étape après étape."},
-          {"role": "assistant", "content": "Oui, bien sûr. Quel est le problème ?"},
-          {"role": "user", "content": "Voici le problème : " + selectedText}
-        ]
-      };
+      if (lang === "fr") {
+        messages.push({"role": "system", "content": "Tu es un assistant qui parle français. Tu es pédagogue et tu prends ton temps pour expliquer étape après étape."});
+        messages.push({"role": "user", "content": "J'ai besoin d'une solution à ce problème. Explique moi étape après étape."});
+        messages.push({"role": "assistant", "content": "Oui, bien sûr. Quel est le problème ?"});
+        messages.push({"role": "user", "content": "Voici le problème : " + selectedText + ".f"});
+      } else if (lang === "en") {
+        messages.push({"role": "system", "content": "You are an assistant who speaks English. You are pedagogical and take your time to explain step by step."});
+        messages.push({"role": "user", "content": "I need a solution to this problem. Explain to me step by step."});
+        messages.push({"role": "assistant", "content": "Yes, of course. What is the problem?"});
+        messages.push({"role": "user", "content": "Here's the problem: " + selectedText + ".e"});
+      }
       break;
+    
     case 4:
-      request = {
-        model: "gpt-3.5-turbo",
-        messages: [
-          {"role": "system", "content": "Tu es un assistant qui parle français. Tu prends en compte des contextes écrits sans oublier de détail pour fournir des réponses polies et riches?"},
-          {"role": "user", "content": "J'ai besoin d'une réponse à ce message. Il faut que la réponse soit adaptée à l'interlocuteur."},
-          {"role": "assistant", "content": "Oui, bien sûr. À quel message faut-il répondre ?"},
-          {"role": "user", "content": "Voici le message : " + selectedText}
-        ]
-      };
+      if (lang === "fr") {
+        messages.push({"role": "system", "content": "Tu es un assistant qui parle français. Tu prends en compte des contextes écrits sans oublier de détail pour fournir des réponses polies et riches."});
+        messages.push({"role": "user", "content": "J'ai besoin d'une réponse à ce message. Il faut que la réponse soit adaptée à l'interlocuteur."});
+        messages.push({"role": "assistant", "content": "Oui, bien sûr. À quel message faut-il répondre ?"});
+        messages.push({"role": "user", "content": "Voici le message : " + selectedText + ".f"});
+      } else if (lang === "en") {
+        messages.push({"role": "system", "content": "You are an assistant who speaks English. You take into account written contexts without forgetting any detail to provide polite and rich responses."});
+        messages.push({"role": "user", "content": "I need a response to this message. The response must be adapted to the interlocutor."});
+        messages.push({"role": "assistant", "content": "Yes, of course. Which message should I respond to?"});
+        messages.push({"role": "user", "content": "Here's the message: " + selectedText + ".e"});
+      }
       break;
-    default:
-      throw new Error("Mode invalide.");
   }
   
-  return request;
+      
+  // Construire la requête
+  const request = {
+    model: aiVersion,
+    messages: messages
+  };
+  
+  // Envoyer la requête à l'API OpenAI
+  sendOpenAIRequest(request, mode);
 }
 
 
 // Crée les menus lors de l'installation ou de la mise à jour de l'extension
 chrome.runtime.onInstalled.addListener(function() {
+
   chrome.contextMenus.create({
     "id": "option-1",
     "title": "Expliquer",
@@ -175,46 +191,58 @@ chrome.contextMenus.onClicked.addListener(function(info, tab) {
 
 // Envoie de requête à OpenAI
 async function sendOpenAIRequest(requestNumber) {
-  
   return new Promise((resolve, reject) => {
     // Récupération de la clé API depuis le local storage
-    chrome.storage.local.get("apiKey", async function(result) {
+    chrome.storage.local.get(["apiKey", "ai_version", "language"], async (result) => {
       const apiKey = result.apiKey;
-      
+      const lang = result.language;
+      const aiVersion = result.ai_version
       // Vérification que la clé API est définie
       if (!apiKey) {
         console.error("Clé API non définie.");
         reject(new Error("Clé API non définie."));
       }
       
-      
       // Création de la requête en fonction du numéro
-      const request = createRequest(requestNumber, selectedText);
+      const request = createRequest(requestNumber, selectedText, lang, aiVersion);
+      
+      // Regler l'adresse en fonction de la version
+      let apiAddress;
+        
+      switch (aiVersion) {
+        case "gpt-3.5-turbo":
+          apiAddress = 'https://api.openai.com/v1/chat/completions';
+          break;
+        default:
+          apiAddress = 'https://api.openai.com/v1/chat/completions';
+          throw new Error("Version d'IA invalide.");
+      }
+        
       // Envoyer un message au content script indiquant que la requête est en cours de traitement
       chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         chrome.tabs.sendMessage(tabs[0].id, {processing: true});
       });
-      // Envoi de la requête à l'API OpenAI
-      console.log(request);
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + apiKey
-        },
-        body: JSON.stringify(request)
-      });  
-      
-      const responseData = await response.json();
-      console.log("Response received from OpenAI API:", responseData);
-      
-      if (responseData.choices[0].message.content) {
-        const completion = responseData.choices[0].message.content.trim();
-        console.log("Completion:", completion);
-        resolve(completion);
-      } else {
-        reject(new Error("Réponse invalide de l'API OpenAI."));
-      }      
+        
+        // Envoi de la requête à l'API OpenAI
+        const response = await fetch(apiAddress, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + apiKey
+          },
+          body: JSON.stringify(request)
+        });
+        
+        const responseData = await response.json();
+        console.log("Response received from OpenAI API:", responseData);
+        
+        if (responseData.choices[0].message.content) {
+          const completion = responseData.choices[0].message.content.trim();
+          console.log("Completion:", completion);
+          resolve(completion);
+        } else {
+          reject(new Error("Réponse invalide de l'API OpenAI."));
+        }
+      });
     });
-  });
 }

@@ -33,22 +33,36 @@ document.addEventListener("DOMContentLoaded", function() {
     saveBtn.classList.add("hidden");
     editBtn.classList.remove("hidden");
   }
-  
   function loadParameters() {
-    chrome.storage.local.get("apiKey", (result) => {
+    chrome.storage.local.get(["apiKey", "ai_version", "language"], (result) => {
       const apiKey = result.apiKey || "";
+      const aiVersion = result.ai_version || "gpt-3.5-turbo";
+      const lang = result.language || "fr";
   
+      // Vérifier si l'API key est valide
       if (!verifyApiKey(apiKey)) {
         activateForm();
         return;
       }
   
+      // Définir les valeurs des inputs
       apiKeyInput.value = apiKey;
-      modelSelect.value = "gpt-3.5-turbo";
-      languageSelect.value = "en";
+      modelSelect.value = aiVersion;
+      languageSelect.value = lang;
+  
+      // Enregistrer la version d'IA et la langue dans le stockage local s'ils ne sont pas définis
+      if (!result.ai_version) {
+        chrome.storage.local.set({ "ai_version": aiVersion });
+      }
+      if (!result.language) {
+        chrome.storage.local.set({ "language": lang });
+      }
+  
+      // Désactiver le formulaire
       deactivateForm();
     });
   }
+  
 
   function saveParameters() {
     const apiKey = apiKeyInput.value.trim();
