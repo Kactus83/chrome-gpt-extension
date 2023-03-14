@@ -45,10 +45,10 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         // Stocke le texte sélectionné dans la variable globale
         selectedText = request.selectedText;
         // Actualisation des requettes
-        request1 = request.selectedText;
-        request2 = request.selectedText;
-        request3 = request.selectedText;
-        request4 = request.selectedText;
+        request1 = "Explique moi ceci : " + request.selectedText;
+        request2 = "Resume moi ceci :" + request.selectedText;
+        request3 = "Resouds moi ce probleme : " + request.selectedText;
+        request4 = "Reponds à ce message : " + request.selectedText;
         // Active l'option du menu contextuel
         chrome.contextMenus.update("option-1", {"enabled": true});
         chrome.contextMenus.update("option-2", {"enabled": true});
@@ -116,21 +116,16 @@ async function onOption4Click(info, tab) {
 
 // Ajout des écouteurs d'événements pour les clics sur les options
 chrome.contextMenus.onClicked.addListener(function(info, tab) {
-  console.log("CHECK 2");
   if (info.menuItemId === "option-1") {
-    console.log("opt 1");
     onOption1Click(info, tab);
   }
   if (info.menuItemId === "option-2") {
-    console.log("opt 2");
     onOption2Click(info, tab);
   }
   if (info.menuItemId === "option-3") {
-    console.log("opt 3");
     onOption3Click(info, tab);
   }
   if (info.menuItemId === "option-4") {
-    console.log("opt 4");
     onOption4Click(info, tab);
   }
 });
@@ -163,7 +158,6 @@ async function sendOpenAIRequest(prompt) {
         })
       });
       const data = await response.json();
-      console.log("open api result : " + data);
       resolve(data.choices[0].text);
     });
   });
