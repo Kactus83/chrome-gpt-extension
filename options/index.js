@@ -34,9 +34,10 @@ document.addEventListener("DOMContentLoaded", function() {
     editBtn.classList.remove("hidden");
   }
   function loadParameters() {
-    chrome.storage.local.get(["apiKey", "ai_version", "language"], (result) => {
+    chrome.storage.local.get(["apiKey", "ai_version", "language", "api_address"], (result) => {
       const apiKey = result.apiKey || "";
-      const aiVersion = result.ai_version || "gpt-3.5-turbo";
+      const aiVersion = "gpt-3.5-turbo";
+      const apiAddress = "https://api.openai.com/v1/completions";
       const lang = result.language || "fr";
   
       // Vérifier si l'API key est valide
@@ -52,7 +53,8 @@ document.addEventListener("DOMContentLoaded", function() {
   
       // Enregistrer la version d'IA et la langue dans le stockage local s'ils ne sont pas définis
       if (!result.ai_version) {
-        chrome.storage.local.set({ "ai_version": aiVersion });
+        chrome.storage.local.set({ "ai_version": "gpt-3.5-turbo" });
+        chrome.storage.local.set({ "api_address": "https://api.openai.com/v1/completions" });
       }
       if (!result.language) {
         chrome.storage.local.set({ "language": lang });
@@ -64,42 +66,24 @@ document.addEventListener("DOMContentLoaded", function() {
   }
   
 
-  function saveParameters() {
+  async function saveParameters() {
     const apiKey = apiKeyInput.value.trim();
     const model = modelSelect.value;
     const language = languageSelect.value;
+    let apiAddress;
+    if(model === "gpt-3.5-turbo") {apiAddress = "https://api.openai.com/v1/chat/completions"};
   
     if (!apiKey) {
       return alert("Please enter a valid API key.");
-    }
+    };
   
-    chrome.storage.local.set({ apiKey, model, language }, () => {
+    await chrome.storage.local.set({ apiKey, model, language, apiAddress }, () => {
       deactivateForm();
       alert("Options saved successfully!");
     });
   }
   
-  saveBtn.addEventListener("click", () => {
-    saveParameters();
-  });
-  
-  
   loadParameters();
-  
-  document.getElementById("options-form").addEventListener("submit", (e) => {
-    e.preventDefault();
-  
-    const apiKey = apiKeyInput.value.trim();
-  
-    if (!verifyApiKey(apiKey)) {
-      return alert("Please enter a valid API key.");
-    }
-  
-    chrome.storage.local.set({ apiKey }, () => {
-      deactivateForm();
-      alert("Options saved successfully!");
-    });
-  });
   
   saveBtn.addEventListener("click", () => {
     saveParameters();
