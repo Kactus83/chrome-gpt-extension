@@ -21,15 +21,15 @@ document.addEventListener('touchend', function(event) {
 // Ecoute les resultats de requettes
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.option === "explain") {
-    alert("Explication : " + request.request);
+    alert("Explication : " + request.response);
   }
   if (request.option === "summarize") {
-    alert("Resume : " + request.request);
+    alert("Resume : " + request.response);
   }
   if (request.option === "solve") {
-    alert("Resolution : " + request.request);
+    alert("Resolution : " + request.response);
   }
   if (request.option === "answer") {
-    alert("Reponse : " + request.request);
+    alert("Reponse : " + request.response);
   }
 });
