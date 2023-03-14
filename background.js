@@ -68,21 +68,21 @@ chrome.runtime.onInstalled.addListener(function() {
 
   chrome.contextMenus.create({
     "id": "option-2",
-    "title": "Resumer",
+    "title": "Résumer",
     "contexts": ["selection"],
     "enabled": false
   });
 
   chrome.contextMenus.create({
     "id": "option-3",
-    "title": "Resoudre",
+    "title": "Résoudre",
     "contexts": ["selection"],
     "enabled": false
   });
 
   chrome.contextMenus.create({
     "id": "option-4",
-    "title": "Repondre",
+    "title": "Répondre",
     "contexts": ["selection"],
     "enabled": false
   });
@@ -111,6 +111,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     }
   }
 });
+
 // Fonction pour réagir au clic sur l'option "GPT - Expliquer"
 async function onOption1Click(info, tab) {
   try {
