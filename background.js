@@ -189,7 +189,10 @@ async function sendOpenAIRequest(requestNumber) {
       
       // Création de la requête en fonction du numéro
       const request = createRequest(requestNumber, selectedText);
-      
+      // Envoyer un message au content script indiquant que la requête est en cours de traitement
+      chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, {processing: true});
+      });
       // Envoi de la requête à l'API OpenAI
       console.log(request);
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
