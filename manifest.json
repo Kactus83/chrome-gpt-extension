@@ -1,13 +1,14 @@
 {
     "manifest_version": 3,
-    "name": "Mon extension",
+    "name": "Chat GPT Browser",
     "version": "1.0.0",
-    "description": "Description de l'extension",
+    "description": "Add On pour integration de chatGPT dans le navigateur",
     "permissions": [
         "tabs",
         "activeTab",
         "storage",
-        "contextMenus"
+        "contextMenus",
+        "scripting"
     ],
     "host_permissions": [
         "https://*.openai.com/*"
@@ -16,13 +17,13 @@
         "page": "options/options.html",
         "open_in_tab": false
     },
+    "background": {
+        "service_worker": "background.js"
+    },
     "content_scripts": [
         {
             "matches": ["https://*/*", "http://*/*"],
             "js": ["content-script.js"]
         }
-    ],
-    "background": {
-        "service_worker": "background.js"
-    }
+    ]
 }
