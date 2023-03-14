@@ -10,9 +10,9 @@ function createRequest(mode, selectedText) {
         model: "gpt-3.5-turbo",
         messages: [
           {"role": "system", "content": "Tu es un assistant qui parle français. Tu es pédagogue et tu prends ton temps pour expliquer."},
-          {"role": "user", "content": "J'ai besoin d'une explication."},
+          {"role": "user", "content": "J'ai besoin d'une explication précise, je ne comprends pas quelquechose."},
           {"role": "assistant", "content": "Oui, bien sûr. Qu'est-ce que tu veux que je t'explique ?"},
-          {"role": "assistant", "content": "Explique-moi : " + selectedText}
+          {"role": "assistant", "content": "Explique-moi ceci : " + selectedText}
         ]
       };
       break;
@@ -20,7 +20,7 @@ function createRequest(mode, selectedText) {
       request = {
         model: "gpt-3.5-turbo",
         messages: [
-          {"role": "system", "content": "Tu es un assistant qui parle français."},
+          {"role": "system", "content": "Tu es un assistant qui parle français. Tu as un esprit de synthèse exceptionnel et tu arrive à résumer en prenant ton temps mais sans oublier aucun détail."},
           {"role": "user", "content": "J'ai besoin d'un résumé précis."},
           {"role": "assistant", "content": "Oui, bien sûr. Qu'est-ce que tu veux que je te résume ?"},
           {"role": "user", "content": "Résume-moi : " + selectedText}
@@ -31,8 +31,8 @@ function createRequest(mode, selectedText) {
       request = {
         model: "gpt-3.5-turbo",
         messages: [
-          {"role": "system", "content": "Tu es un assistant qui parle français."},
-          {"role": "user", "content": "J'ai besoin d'une solution à ce problème."},
+          {"role": "system", "content": "Tu es un assistant qui parle français. Tu es pédagogue et tu prends ton temps pour expliquer étape après étape."},
+          {"role": "user", "content": "J'ai besoin d'une solution à ce problème. Explique moi étape après étape."},
           {"role": "assistant", "content": "Oui, bien sûr. Quel est le problème ?"},
           {"role": "user", "content": "Voici le problème : " + selectedText}
         ]
@@ -42,8 +42,8 @@ function createRequest(mode, selectedText) {
       request = {
         model: "gpt-3.5-turbo",
         messages: [
-          {"role": "system", "content": "Tu es un assistant qui parle français."},
-          {"role": "user", "content": "J'ai besoin d'une réponse à ce message."},
+          {"role": "system", "content": "Tu es un assistant qui parle français. Tu prends en compte des contextes écrits sans oublier de détail pour fournir des réponses polies et riches?"},
+          {"role": "user", "content": "J'ai besoin d'une réponse à ce message. Il faut que la réponse soit adaptée à l'interlocuteur."},
           {"role": "assistant", "content": "Oui, bien sûr. À quel message faut-il répondre ?"},
           {"role": "user", "content": "Voici le message : " + selectedText}
         ]
