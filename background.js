@@ -144,7 +144,7 @@ async function sendOpenAIRequest(prompt) {
         reject(new Error("Clé API non définie."));
       }
       // Envoi de la requête à l'API OpenAI
-      const response = await fetch('https://api.openai.com/v1/engines/davinci-codex/completions', {
+      const response = await fetch('https://api.openai.com/v1/engines/text-gpt-3-5-turbo/completions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
