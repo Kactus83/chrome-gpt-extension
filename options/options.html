@@ -1,19 +1,21 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title>Options</title>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body>
-	<div class="container">
-		<h1>Options</h1>
-		<form id="options-form">
-			<label for="api-key">OpenAI API Key:</label>
-			<input type="text" id="api-key" name="api-key" placeholder="Enter your OpenAI API Key">
-			<button type="submit">Save</button>
-		</form>		  
-	</div>
-	<script src="index.js"></script>
-</body>
+  <head>
+    <title>Options</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div class="container">
+      <h1>Options</h1>
+      <form id="options-form">
+        <label for="api-key">OpenAI API Key:</label>
+        <input type="text" id="api-key" name="api-key" placeholder="Enter your OpenAI API Key">
+        <button type="submit" id="save-btn">Save</button>
+        <button type="button" id="edit-btn" class="hidden">Edit</button>
+      </form>		  
+    </div>
+    <script src="index.js"></script>
+  </body>
 </html>
