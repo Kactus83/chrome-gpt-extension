@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function() {
     chrome.storage.local.get(["apiKey", "ai_version", "language", "api_address"], (result) => {
       const apiKey = result.apiKey || "";
       const aiVersion = "gpt-3.5-turbo";
-      const apiAddress = "https://api.openai.com/v1/completions";
+      const apiAddress = "https://api.openai.com/v1/chat/completions";
       const lang = result.language || "fr";
   
       // Vérifier si l'API key est valide
@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function() {
       // Enregistrer la version d'IA et la langue dans le stockage local s'ils ne sont pas définis
       if (!result.ai_version) {
         chrome.storage.local.set({ "ai_version": "gpt-3.5-turbo" });
-        chrome.storage.local.set({ "api_address": "https://api.openai.com/v1/completions" });
+        chrome.storage.local.set({ "api_address": "https://api.openai.com/v1/chat/completions" });
       }
       if (!result.language) {
         chrome.storage.local.set({ "language": lang });
