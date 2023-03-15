@@ -1,4 +1,4 @@
-export function getSummaryMessages(selectedText, lang) {
+export function getResumeMessage(selectedText, lang) {
     let messages = [];
     
     if (lang === "fr") {

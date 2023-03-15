@@ -1,4 +1,4 @@
-export function solveMode(selectedText, lang) {
+export function getSolveMessage(selectedText, lang) {
     let _messages = [];
   
     if (lang === "fr") {

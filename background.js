@@ -38,7 +38,6 @@ chrome.runtime.onInstalled.addListener(function() {
 });
 
 
-
 // Écoute les messages envoyés depuis le contenu
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.selectedText) {
@@ -67,44 +66,57 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 // Ajout des écouteurs d'événements pour les clics sur les options
 chrome.contextMenus.onClicked.addListener(function(info, tab) {
   if (info.menuItemId === "option-1") {
-          
-    // Envoyer un message au content script indiquant que la requête est en cours de traitement
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-      chrome.tabs.sendMessage(tabs[0].id, {processing: true});
-    });
+    getLocalSettings((apiKey, aiVersion, lang, apiAddress) => {
+      // Envoyer un message au content script indiquant que la requête est en cours de traitement
+      chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, {processing: true});
+      });
 
-    onOption1Click(info, tab);
+      onOption1Click(info, tab, selectedText, apiKey, aiVersion, lang, apiAddress);
+    });
   }
   
   if (info.menuItemId === "option-2") {
-          
-    // Envoyer un message au content script indiquant que la requête est en cours de traitement
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-      chrome.tabs.sendMessage(tabs[0].id, {processing: true});
-    });
+    getLocalSettings((apiKey, aiVersion, lang, apiAddress) => {
+      // Envoyer un message au content script indiquant que la requête est en cours de traitement
+      chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, {processing: true});
+      });
 
-    onOption2Click(info, tab);
+      onOption2Click(info, tab, selectedText, apiKey, aiVersion, lang, apiAddress);
+    });
   }
 
   if (info.menuItemId === "option-3") {
-          
-    // Envoyer un message au content script indiquant que la requête est en cours de traitement
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-      chrome.tabs.sendMessage(tabs[0].id, {processing: true});
-    });
+    getLocalSettings((apiKey, aiVersion, lang, apiAddress) => {
+      // Envoyer un message au content script indiquant que la requête est en cours de traitement
+      chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, {processing: true});
+      });
 
-    onOption3Click(info, tab);
+      onOption3Click(info, tab, selectedText, apiKey, aiVersion, lang, apiAddress);
+    });
   }
 
   if (info.menuItemId === "option-4") {
-          
-    // Envoyer un message au content script indiquant que la requête est en cours de traitement
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-      chrome.tabs.sendMessage(tabs[0].id, {processing: true});
-    });
+    getLocalSettings((apiKey, aiVersion, lang, apiAddress) => {
+      // Envoyer un message au content script indiquant que la requête est en cours de traitement
+      chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, {processing: true});
+      });
 
-    onOption4Click(info, tab);
+      onOption4Click(info, tab, selectedText, apiKey, aiVersion, lang, apiAddress);
+    });
   }
 });
 
+function getLocalSettings(callback) {
+  chrome.storage.local.get(["apiKey", "ai_version", "language", "api_address"], function(result) {
+    const apiKey = result.apiKey;
+    const aiVersion = result.ai_version;
+    const lang = result.language;
+    const apiAddress = result.api_address;
 
+    callback(apiKey, aiVersion, lang, apiAddress);
+  });
+}

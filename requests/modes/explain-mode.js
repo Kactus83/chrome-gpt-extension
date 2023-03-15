@@ -1,4 +1,4 @@
-export function getExplanationMessages(selectedText, lang) {
+export function getExplainMessage(selectedText, lang) {
     let messages = [];
     
     if (lang === "fr") {

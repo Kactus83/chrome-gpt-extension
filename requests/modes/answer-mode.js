@@ -1,4 +1,4 @@
-export function answerMode(selectedText, lang) {
+export function getAnswerMessage(selectedText, lang) {
     let _messages = [];
   
     if (lang === "fr") {
