@@ -36,8 +36,8 @@ document.addEventListener("DOMContentLoaded", function() {
   function loadParameters() {
     chrome.storage.local.get(["apiKey", "ai_version", "language", "api_address"], (result) => {
       const apiKey = result.apiKey || "";
-      const aiVersion = "gpt-3.5-turbo";
-      const apiAddress = "https://api.openai.com/v1/chat/completions";
+      const aiVersion = result.ai_version || "gpt-3.5-turbo";
+      const apiAddress = result.api_address || "https://api.openai.com/v1/chat/completions";
       const lang = result.language || "fr";
   
       // Vérifier si l'API key est valide
@@ -71,8 +71,11 @@ document.addEventListener("DOMContentLoaded", function() {
     const model = modelSelect.value;
     const language = languageSelect.value;
     let apiAddress;
-    if(model === "gpt-3.5-turbo") {apiAddress = "https://api.openai.com/v1/chat/completions"};
-  
+    
+    if (model === "gpt-3.5-turbo" || model === "gpt-4" || model === "gpt-4-32k") {
+      apiAddress = "https://api.openai.com/v1/chat/completions";
+    }
+    
     if (!apiKey) {
       return alert("Please enter a valid API key.");
     };
