@@ -58,8 +58,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       overlay.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 999999;';
 
       const responseDiv = document.createElement('div');
-      responseDiv.style.cssText = 'position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #ffffff; font-size: 2em;';
-
+      responseDiv.style.cssText = 'position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #ffffff; font-size: 1.5em; width: 90%; max-width: 800px; background-color: rgba(0, 0, 0, 0.95); border: 3px solid white; padding: 25px; line-height: 1.5; text-align: justify;';
+           
       // Si la réponse est une erreur, afficher le message d'erreur
       if (request.error) {
         responseDiv.textContent = "Erreur : " + request.error.message;
