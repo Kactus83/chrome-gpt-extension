@@ -26,6 +26,7 @@ export async function createRequest(mode, selectedText, lang, _aiVersion) {
   const request = {
     model: _aiVersion,
     messages: messages,
+    stream: false
   };
   return request;
 }
