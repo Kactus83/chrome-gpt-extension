@@ -135,6 +135,15 @@ async function onOption1Click(info, tab) {
     console.log(response);
     chrome.tabs.sendMessage(tab.id, {option: "explain", response: response});
   } catch (error) {
+    // Envoyer un message au content script indiquant que la requête est en cours de traitement
+    let errorData = {
+      code: null,
+      message: error,
+      type: null
+    };
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+      chrome.tabs.sendMessage(tabs[0].id, {error: true, data: errorData});
+    });
     console.error(error);
   }
 }
@@ -146,6 +155,15 @@ async function onOption2Click(info, tab) {
     console.log(response);
     chrome.tabs.sendMessage(tab.id, {option: "summarize", response: response});
   } catch (error) {
+    // Envoyer un message au content script indiquant que la requête est en cours de traitement
+    let errorData = {
+      code: null,
+      message: error,
+      type: null
+    };
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+      chrome.tabs.sendMessage(tabs[0].id, {error: true, data: errorData});
+    });
     console.error(error);
   }
 }
@@ -157,6 +175,15 @@ async function onOption3Click(info, tab) {
     console.log(response);
     chrome.tabs.sendMessage(tab.id, {option: "solve", response: response});
   } catch (error) {
+    // Envoyer un message au content script indiquant que la requête est en cours de traitement
+    let errorData = {
+      code: null,
+      message: error,
+      type: null
+    };
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+      chrome.tabs.sendMessage(tabs[0].id, {error: true, data: errorData});
+    });
     console.error(error);
   }
 }
@@ -168,6 +195,15 @@ async function onOption4Click(info, tab) {
     console.log(response);
     chrome.tabs.sendMessage(tab.id, {option: "answer", response: response});
   } catch (error) {
+    // Envoyer un message au content script indiquant que la requête est en cours de traitement
+    let errorData = {
+      code: null,
+      message: error,
+      type: null
+    };
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+      chrome.tabs.sendMessage(tabs[0].id, {error: true, data: errorData});
+    });
     console.error(error);
   }
 }
@@ -175,15 +211,42 @@ async function onOption4Click(info, tab) {
 // Ajout des écouteurs d'événements pour les clics sur les options
 chrome.contextMenus.onClicked.addListener(function(info, tab) {
   if (info.menuItemId === "option-1") {
+          
+    // Envoyer un message au content script indiquant que la requête est en cours de traitement
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+      chrome.tabs.sendMessage(tabs[0].id, {processing: true});
+    });
+
     onOption1Click(info, tab);
   }
+  
   if (info.menuItemId === "option-2") {
+          
+    // Envoyer un message au content script indiquant que la requête est en cours de traitement
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+      chrome.tabs.sendMessage(tabs[0].id, {processing: true});
+    });
+
     onOption2Click(info, tab);
   }
+
   if (info.menuItemId === "option-3") {
+          
+    // Envoyer un message au content script indiquant que la requête est en cours de traitement
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+      chrome.tabs.sendMessage(tabs[0].id, {processing: true});
+    });
+
     onOption3Click(info, tab);
   }
+
   if (info.menuItemId === "option-4") {
+          
+    // Envoyer un message au content script indiquant que la requête est en cours de traitement
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+      chrome.tabs.sendMessage(tabs[0].id, {processing: true});
+    });
+
     onOption4Click(info, tab);
   }
 });
@@ -203,19 +266,13 @@ async function sendOpenAIRequest(requestNumber) {
       console.log(2, apiAddress);
 
       // Vérification que la clé API est définie
-      if (!apiKey) {
-        console.error("Clé API non définie.");
+      if (!apiKey) {   
         reject(new Error("Clé API non définie."));
       }
       
       // Création de la requête en fonction du numéro
       const _request = await createRequest(requestNumber, selectedText, lang, aiVersion);
       console.log(_request);
-          
-      // Envoyer un message au content script indiquant que la requête est en cours de traitement
-      chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, {processing: true});
-      });
 
       // Envoi de la requête à l'API OpenAI
       const response = await fetch(apiAddress, {

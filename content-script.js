@@ -29,20 +29,24 @@ let overlayContent = null;
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.processing) {
     // Créer l'image de chargement
+    console.log(1, loadingImg);
     loadingImg = document.createElement('img');
     loadingImg.src = chrome.runtime.getURL("assets/loading.svg");
     loadingImg.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 999999;';
 
     document.body.appendChild(loadingImg);
+    console.log(2, loadingImg);
   } else {
     // Supprimer l'image de chargement
+    console.log(loadingImg); // Vérifier si loadingImg existe
     if (loadingImg) {
+      console.log("check"); // Vérifier si on passe ici
       loadingImg.remove();
       loadingImg = null;
     }
     
     // Afficher le résultat de la requête dans l'overlay
-    if (request.response) {
+    if (request.response || request.error) {
       // Supprimer le contenu précédent de l'overlay s'il existe
       if (overlayContent) {
         overlayContent.remove();
@@ -57,21 +61,26 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       responseDiv.style.cssText = 'position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #ffffff; font-size: 2em;';
 
       // Si la réponse est une erreur, afficher le message d'erreur
-      if (request.response.error) {
-        responseDiv.textContent = "Erreur : " + request.response.error;
+      if (request.error) {
+        responseDiv.textContent = "Erreur : " + request.error.message;
       } else {
         // Sinon, afficher le résultat de la requête
-        if (request.option === "explain") {
-          responseDiv.textContent = "Explication : " + request.response.response;
-        }
-        if (request.option === "summarize") {
-          responseDiv.textContent = "Résumé : " + request.response.response;
-        }
-        if (request.option === "solve") {
-          responseDiv.textContent = "Résolution : " + request.response.response;
-        }
-        if (request.option === "answer") {
-          responseDiv.textContent = "Réponse : " + request.response.response;
+        switch (request.option) {
+          case "explain":
+            responseDiv.textContent = "Explication : " + request.response;
+            break;
+          case "summarize":
+            responseDiv.textContent = "Résumé : " + request.response;
+            break;
+          case "solve":
+            responseDiv.textContent = "Résolution : " + request.response;
+            break;
+          case "answer":
+            responseDiv.textContent = "Réponse : " + request.response;
+            break;
+          default:
+            console.error("Option invalide.");
+            break;
         }
       }
 
