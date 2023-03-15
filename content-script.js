@@ -30,8 +30,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.processing) {
     // Créer l'image de chargement
     loadingImg = document.createElement('img');
-    loadingImg.src = chrome.runtime.getURL("assets/loading.gif");
-    loadingImg.style.cssText = 'position: fixed; top: 10px; right: 10px; z-index: 999999;';
+    loadingImg.src = chrome.runtime.getURL("assets/loading.svg");
+    loadingImg.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 999999;';
 
     document.body.appendChild(loadingImg);
   } else {
