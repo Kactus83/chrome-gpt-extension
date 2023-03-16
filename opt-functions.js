@@ -1,5 +1,5 @@
 // Imports
-import { sendOpenAIRequest } from "./requests/api-request.js";
+import { sendOpenAIRequestWithStream } from "./requests/api-request.js";
 import { createRequest } from "./requests/request-factory.js";
 
 // Fonction générique pour traiter les données reçues en streaming
