@@ -3,24 +3,16 @@ import { sendOpenAIRequestWithStream } from "./requests/api-request.js";
 import { createRequest } from "./requests/request-factory.js";
 
 // Fonction générique pour traiter les données reçues en streaming
-async function handleStream(streamPromise, tabId) {
-  let result = '';
+async function handleStream(streamPromise, tab) {
   const stream = await streamPromise;
-
-  const reader = stream.body.getReader();
+  const reader = stream.getReader();
+  let result = "";
 
   while (true) {
     const { done, value } = await reader.read();
     if (done) break;
     result += new TextDecoder().decode(value);
-    const completion = parseCompletion(result);
-    if (completion !== null) {
-      chrome.runtime.sendMessage({ option: "stream", response: completion }, (response) => {
-        // Callback pour gérer la réponse
-        console.log(response);
-      });
-      result = '';
-    }
+    chrome.tabs.sendMessage(tab.id, {option: "stream", response: result});
   }
 }
 
@@ -35,7 +27,10 @@ export async function onOption1Click(info, tab, selectedText, apiKey, aiVersion,
     const streamPromise = sendOpenAIRequestWithStream(apiKey, apiAddress, request);
 
     // Traiter les données en streaming
-    handleStream(streamPromise, tab.id);
+    // Attendre 500ms avant de traiter les données en streaming
+    setTimeout(() => {
+      handleStream(streamPromise, tab);
+    }, 500);
 
   } catch (error) {
     // Envoyer un message au content script indiquant qu'il y a une erreur
@@ -45,7 +40,7 @@ export async function onOption1Click(info, tab, selectedText, apiKey, aiVersion,
       type: null
     };
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-      chrome.tabs.sendMessage(tabs[0].id, {error: true, data: errorData.message});
+      chrome.tabs.sendMessage(tab, {error: true, data: errorData.message});
     });
     console.error(error);
   }
@@ -61,7 +56,10 @@ export async function onOption2Click(info, tab, selectedText, apiKey, aiVersion,
     const streamPromise = sendOpenAIRequestWithStream(apiKey, apiAddress, request);
 
     // Gestion des données en streaming
-    handleStream(streamPromise, tab.id, "summarize");
+    // Attendre 500ms avant de traiter les données en streaming
+    setTimeout(() => {
+      handleStream(streamPromise, tab);
+    }, 500);
   } catch (error) {
     // Envoyer un message au content script indiquant qu'il y a une erreur
     let errorData = {
@@ -70,7 +68,7 @@ export async function onOption2Click(info, tab, selectedText, apiKey, aiVersion,
       type: null
     };
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-      chrome.tabs.sendMessage(tabs[0].id, {error: true, data: errorData});
+      chrome.tabs.sendMessage(tab, {error: true, data: errorData});
     });
     console.error(error);
   }
@@ -86,7 +84,10 @@ export async function onOption3Click(info, tab, selectedText, apiKey, aiVersion,
     const streamPromise = sendOpenAIRequestWithStream(apiKey, apiAddress, request);
 
     // Gestion des données en streaming
-    handleStream(streamPromise, tab.id, "solve");
+    // Attendre 500ms avant de traiter les données en streaming
+    setTimeout(() => {
+      handleStream(streamPromise, tab);
+    }, 500);
   } catch (error) {
     // Envoyer un message au content script indiquant qu'il y a une erreur
     let errorData = {
@@ -95,7 +96,7 @@ export async function onOption3Click(info, tab, selectedText, apiKey, aiVersion,
       type: null
     };
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-      chrome.tabs.sendMessage(tabs[0].id, {error: true, data: errorData});
+      chrome.tabs.sendMessage(tab, {error: true, data: errorData});
     });
     console.error(error);
   }
@@ -111,7 +112,10 @@ export async function onOption4Click(info, tab, selectedText, apiKey, aiVersion,
     const streamPromise = sendOpenAIRequestWithStream(apiKey, apiAddress, request);
 
     // Gestion des données en streaming
-    handleStream(streamPromise, tab.id, "answer");
+    // Attendre 500ms avant de traiter les données en streaming
+    setTimeout(() => {
+      handleStream(streamPromise, tab);
+    }, 500);
   } catch (error) {
     // Envoyer un message au content script indiquant qu'il y a une erreur
     let errorData = {
@@ -120,7 +124,7 @@ export async function onOption4Click(info, tab, selectedText, apiKey, aiVersion,
       type: null
     };
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-      chrome.tabs.sendMessage(tabs[0].id, {error: true, data: errorData});
+      chrome.tabs.sendMessage(tab, {error: true, data: errorData});
     });
     console.error(error);
   }

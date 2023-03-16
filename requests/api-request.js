@@ -14,20 +14,7 @@ export function sendOpenAIRequestWithStream(apiKey, apiAddress, _request) {
         body: JSON.stringify(_request),
       });
 
-      const reader = response.body.getReader();
-
-      let result = '';
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        result += new TextDecoder().decode(value);
-        const completion = parseCompletion(result);
-        if (completion !== null) {
-          resolve(completion);
-          break;
-        }
-      }
+      resolve(response.body);
     } catch (error) {
       reject(error);
     }
