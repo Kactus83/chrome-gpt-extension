@@ -78,6 +78,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
           case "answer":
             responseDiv.textContent = "Réponse : " + request.response;
             break;
+          case "stream":
+              responseDiv.textContent = request.response;
+            break;
           default:
             console.error("Option invalide.");
             break;
