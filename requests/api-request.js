@@ -1,15 +1,6 @@
 // Envoie de requête à OpenAI
-export function sendOpenAIRequest(_request) {
+export function sendOpenAIRequest(apiKey, apiAddress, _request) {
   return new Promise((resolve, reject) => {
-    // Récupération de la clé API depuis le local storage
-    chrome.storage.local.get(["apiKey", "ai_version", "language", "api_address"], (result) => {
-      const apiKey = result.apiKey;
-      const apiAddress = result.api_address;
-
-      // Vérification que la clé API est définie
-      if (!apiKey) {
-        reject(new Error("Clé API non définie."));
-      }
 
       console.log("sending api request");
 
@@ -45,5 +36,4 @@ export function sendOpenAIRequest(_request) {
         reject(error);
       });
     });
-  });
 }
