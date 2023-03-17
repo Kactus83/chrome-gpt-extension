@@ -8,14 +8,43 @@ async function handleStream(streamPromise, tab) {
   const reader = stream.getReader();
   let result = "";
 
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    result += new TextDecoder().decode(value);
-    chrome.tabs.sendMessage(tab.id, {option: "stream", response: result});
+  async function readStream() {
+    const { value, done } = await reader.read();
+    if (done) {
+      console.log("Stream closed");
+      return;
+    }
+
+    handleStreamData(value, tab);
+
+    // Continue la lecture des chunks de données
+    await readStream();
   }
+
+  readStream();
 }
 
+function handleStreamData(chunk, tab) {
+  const message = new TextDecoder().decode(chunk).replace(/^data: /, "");
+  if (message === "[DONE]") {
+    console.log("Stream finished");
+    return;
+  }
+  try {
+    const parsed = JSON.parse(message);
+    if (parsed.choices && parsed.choices.length > 0) {
+      const text = parsed.choices[0].delta && parsed.choices[0].delta.content ? parsed.choices[0].delta.content : "";
+      chrome.tabs.sendMessage(tab.id, { option: "stream", response: text });
+    } else if (parsed.completion) {
+      const text = parsed.completion.charAt(0).toUpperCase() + parsed.completion.slice(1);
+      chrome.tabs.sendMessage(tab.id, { option: "stream", response: text });
+    } else {
+      console.error("Invalid stream message", message);
+    }
+  } catch (error) {
+    console.error("Could not JSON parse stream message", message, error);
+  }
+}
 
 // Fonction pour réagir au clic sur l'option "GPT - Expliquer"
 export async function onOption1Click(info, tab, selectedText, apiKey, aiVersion, language, apiAddress) {
