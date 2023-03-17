@@ -1,12 +1,13 @@
 // Imports
 import { sendOpenAIRequestWithStream } from "./requests/api-request.js";
 import { createRequest } from "./requests/request-factory.js";
+let complete_message = ""; // declaration de la variable ici
 
 // Fonction générique pour traiter les données reçues en streaming
 async function handleStream(streamPromise, tab) {
   const stream = await streamPromise;
   const reader = stream.getReader();
-  let result = "";
+  complete_message = ""; // re-initialization de la variable ici
 
   async function readStream() {
     const { value, done } = await reader.read();
@@ -15,7 +16,7 @@ async function handleStream(streamPromise, tab) {
       return;
     }
 
-    handleStreamData(value, tab);
+    handleStreamData(value, tab); // pass complete_message en argument
 
     // Continue la lecture des chunks de données
     await readStream();
@@ -34,10 +35,12 @@ function handleStreamData(chunk, tab) {
     const parsed = JSON.parse(message);
     if (parsed.choices && parsed.choices.length > 0) {
       const text = parsed.choices[0].delta && parsed.choices[0].delta.content ? parsed.choices[0].delta.content : "";
-      chrome.tabs.sendMessage(tab.id, { option: "stream", response: text });
+      complete_message += text; // ajoute le texte reçu au message complet
+      chrome.tabs.sendMessage(tab.id, { option: "stream", response: complete_message }); // envoie le message complet à contentscript
     } else if (parsed.completion) {
       const text = parsed.completion.charAt(0).toUpperCase() + parsed.completion.slice(1);
-      chrome.tabs.sendMessage(tab.id, { option: "stream", response: text });
+      complete_message += text; // ajoute le texte reçu au message complet
+      chrome.tabs.sendMessage(tab.id, { option: "stream", response: complete_message }); // envoie le message complet à contentscript
     } else {
       console.error("Invalid stream message", message);
     }
@@ -45,6 +48,7 @@ function handleStreamData(chunk, tab) {
     console.error("Could not JSON parse stream message", message, error);
   }
 }
+
 
 // Fonction pour réagir au clic sur l'option "GPT - Expliquer"
 export async function onOption1Click(info, tab, selectedText, apiKey, aiVersion, language, apiAddress) {
