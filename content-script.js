@@ -98,9 +98,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         switch (request.option) {
           case "stream":
             updateOverlayContent(request.response);
-            if (!closeButton) {
-              createCloseButton();
-            }
             break;
           case "stream-done":
             if (!closeButton) {
