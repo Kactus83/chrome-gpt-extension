@@ -28,38 +28,66 @@ let closeButton = null;
 
 function createOverlay() {
   overlay = document.createElement('div');
-  overlay.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 999999;';
+  overlay.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 999999; opacity: 0; transition: opacity 0.3s;';
   document.body.appendChild(overlay);
+
+  setTimeout(() => {
+    overlay.style.opacity = 1;
+  }, 50);
 }
 
 function removeOverlay() {
   if (overlay) {
-    overlay.remove();
-    overlay = null;
+    overlay.style.opacity = 0;
+    setTimeout(() => {
+      overlay.remove();
+      overlay = null;
+    }, 300);
   }
 }
 
 function updateOverlayContent(content) {
-  if (overlayContent) {
-    overlayContent.remove();
+  if (!overlayContent) {
+    overlayContent = document.createElement('div');
+    overlayContent.style.cssText = 'position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #ffffff; font-size: 1.5em; width: 90%; max-width: 800px; max-height: 70%; background-color: rgba(0, 0, 0, 0.95); border: 3px solid white; padding: 25px; line-height: 1.5; text-align: justify; overflow-y: auto;';
+    overlay.appendChild(overlayContent);
+
+    // Appliquer un style sombre à la barre de défilement
+    overlayContent.style.cssText += `
+      scrollbar-width: thin;
+      scrollbar-color: #888 #111;
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background-color: #888;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-track {
+        background-color: #111;
+      }
+    `;
   }
-  
-  overlayContent = document.createElement('div');
-  overlayContent.style.cssText = 'position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #ffffff; font-size: 1.5em; width: 90%; max-width: 800px; background-color: rgba(0, 0, 0, 0.95); border: 3px solid white; padding: 25px; line-height: 1.5; text-align: justify;';
+
   overlayContent.textContent = content;
-  overlay.appendChild(overlayContent);
 }
 
 function createCloseButton() {
   closeButton = document.createElement('button');
   closeButton.textContent = 'Fermer';
-  closeButton.style.cssText = 'position: absolute; bottom: 10%; left: 50%; transform: translateX(-50%); font-size: 1.2em; padding: 10px 20px; background-color: #ffffff; color: #000000; border: 1px solid #000000; cursor: pointer; z-index: 1000000;';
+  closeButton.style.cssText = 'position: absolute; bottom: 6%; left: 50%; transform: translateX(-50%); font-size: 1.2em; padding: 10px 20px; background-color: #444; color: #ffffff; border: 1px solid #ffffff; cursor: pointer; z-index: 1000000; opacity: 0; transition: opacity 0.3s;';
   closeButton.addEventListener('click', () => {
-    removeOverlay();
+    overlay.style.opacity = 0;
+    setTimeout(() => {
+      removeOverlay();
+    }, 300);
   });
   overlay.appendChild(closeButton);
-}
 
+  setTimeout(() => {
+    closeButton.style.opacity = 1;
+  }, 50);
+}
 
 function removeCloseButton() {
   if (closeButton) {
