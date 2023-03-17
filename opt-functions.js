@@ -1,6 +1,8 @@
 // Imports
 import { sendOpenAIRequestWithStream } from "./requests/api-request.js";
 import { createRequest } from "./requests/request-factory.js";
+import { handleError } from "./utils/errors.js";
+
 let complete_message = ""; // declaration de la variable ici
 
 // Fonction générique pour traiter les données reçues en streaming
@@ -16,7 +18,7 @@ async function handleStream(streamPromise, tab) {
       return;
     }
 
-    handleStreamData(value, tab); // pass complete_message en argument
+    handleStreamData(value, tab);
 
     // Continue la lecture des chunks de données
     await readStream();
@@ -26,27 +28,37 @@ async function handleStream(streamPromise, tab) {
 }
 
 function handleStreamData(chunk, tab) {
-  const message = new TextDecoder().decode(chunk).replace(/^data: /, "");
-  if (message === "[DONE]") {
-    console.log("Stream finished");
-    return;
-  }
-  try {
-    const parsed = JSON.parse(message);
-    if (parsed.choices && parsed.choices.length > 0) {
-      const text = parsed.choices[0].delta && parsed.choices[0].delta.content ? parsed.choices[0].delta.content : "";
-      complete_message += text; // ajoute le texte reçu au message complet
-      chrome.tabs.sendMessage(tab.id, { option: "stream", response: complete_message }); // envoie le message complet à contentscript
-    } else if (parsed.completion) {
-      const text = parsed.completion.charAt(0).toUpperCase() + parsed.completion.slice(1);
-      complete_message += text; // ajoute le texte reçu au message complet
-      chrome.tabs.sendMessage(tab.id, { option: "stream", response: complete_message }); // envoie le message complet à contentscript
-    } else {
-      console.error("Invalid stream message", message);
+  const message = new TextDecoder().decode(chunk);
+  const messages = message.split('\n');
+
+  for (const msg of messages) {
+    if (msg.trim() !== '') {
+      let jsonString = msg;
+  
+      if (msg.startsWith('data:')) {
+        jsonString = msg.replace(/^data: /, '');
+      }
+  
+      try {
+        const parsed = JSON.parse(jsonString);
+  
+        if (parsed.choices && parsed.choices.length > 0 && parsed.choices[0].delta && parsed.choices[0].delta.content) {
+          const content = parsed.choices[0].delta.content;
+  
+          // Mettre à jour complete_message et envoyer les données actualisées
+          complete_message += content;
+          chrome.tabs.sendMessage(tab.id, {option: "stream", response: complete_message});
+        }
+      } catch (error) {
+        if (msg.includes('[DONE]')) {
+          chrome.tabs.sendMessage(tab.id, {option: "stream-done"});
+        } else {
+          console.log(message);
+          handleError(tab, error);
+        }
+      }
     }
-  } catch (error) {
-    console.error("Could not JSON parse stream message", message, error);
-  }
+  }   
 }
 
 
@@ -66,16 +78,7 @@ export async function onOption1Click(info, tab, selectedText, apiKey, aiVersion,
     }, 500);
 
   } catch (error) {
-    // Envoyer un message au content script indiquant qu'il y a une erreur
-    let errorData = {
-      code: null,
-      message: error,
-      type: null
-    };
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-      chrome.tabs.sendMessage(tab, {error: true, data: errorData.message});
-    });
-    console.error(error);
+    handleError(tab, error);
   }
 }
 
@@ -94,16 +97,7 @@ export async function onOption2Click(info, tab, selectedText, apiKey, aiVersion,
       handleStream(streamPromise, tab);
     }, 500);
   } catch (error) {
-    // Envoyer un message au content script indiquant qu'il y a une erreur
-    let errorData = {
-      code: null,
-      message: error,
-      type: null
-    };
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-      chrome.tabs.sendMessage(tab, {error: true, data: errorData});
-    });
-    console.error(error);
+    handleError(tab, error);
   }
 }
 
@@ -122,16 +116,7 @@ export async function onOption3Click(info, tab, selectedText, apiKey, aiVersion,
       handleStream(streamPromise, tab);
     }, 500);
   } catch (error) {
-    // Envoyer un message au content script indiquant qu'il y a une erreur
-    let errorData = {
-      code: null,
-      message: error,
-      type: null
-    };
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-      chrome.tabs.sendMessage(tab, {error: true, data: errorData});
-    });
-    console.error(error);
+    handleError(tab, error);
   }
 }
 
@@ -150,16 +135,7 @@ export async function onOption4Click(info, tab, selectedText, apiKey, aiVersion,
       handleStream(streamPromise, tab);
     }, 500);
   } catch (error) {
-    // Envoyer un message au content script indiquant qu'il y a une erreur
-    let errorData = {
-      code: null,
-      message: error,
-      type: null
-    };
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-      chrome.tabs.sendMessage(tab, {error: true, data: errorData});
-    });
-    console.error(error);
+    handleError(tab, error);
   }
 }
 
