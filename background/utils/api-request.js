@@ -18,3 +18,21 @@ export function sendOpenAIRequestWithStream(apiKey, apiAddress, _request) {
     }
   });
 }
+
+// Envoie de requête à OpenAI sans stream de réponse
+export async function sendOpenAIRequest(apiKey, apiAddress, _request) {
+  try {
+    const response = await fetch(apiAddress, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + apiKey
+      },
+      body: JSON.stringify(_request),
+    });
+
+    return await response.json();
+  } catch (error) {
+    throw error;
+  }
+}

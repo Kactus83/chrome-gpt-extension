@@ -1,6 +1,6 @@
 // Imports
 import { sendOpenAIRequestWithStream } from "./utils/api-request.js";
-import { createRequest } from "./requests/request-factory.js";
+import { createRequest } from "./modes/selected-text-modes/request-factory.js";
 import { handleError } from "./utils/errors.js";
 import { handleStream } from "./utils/stream.js";
 
