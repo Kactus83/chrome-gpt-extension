@@ -71,6 +71,21 @@ export class ResponseOverlay {
         this.closeButton = null;
       }
     }
+
+    showLoadingImage() {
+      this.loadingImg = document.createElement("img");
+      this.loadingImg.src = chrome.runtime.getURL("assets/loading.svg");
+      this.loadingImg.style.cssText =
+        "position: fixed; top: 20px; right: 20px; z-index: 999999;";
+      document.body.appendChild(this.loadingImg);
+    }
+  
+    hideLoadingImage() {
+      if (this.loadingImg) {
+        this.loadingImg.remove();
+        this.loadingImg = null;
+      }
+    }
   
     show(content) {
       if (!this.overlay) {
@@ -84,6 +99,14 @@ export class ResponseOverlay {
   
     hide() {
       this.removeOverlay();
+    }
+
+    isVisible() {
+      return this.overlay !== null;
+    }
+    
+    closeButtonExists() {
+      return this.closeButton !== null;
     }
   }
   

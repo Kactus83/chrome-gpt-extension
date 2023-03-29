@@ -20,7 +20,8 @@
             "resources": [
                 "assets/*.gif",
                 "assets/*.svg",
-                "content/services/*.js"
+                "content/services/*.js",
+                "content/gui/*.js"
             ],
             "matches": ["<all_urls>"]
         }
