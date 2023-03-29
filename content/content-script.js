@@ -1,6 +1,6 @@
 (async () => {
-  const { TextDetection } = await import('./content/services/text-detection.js');
-  const { ResponseOverlay } = await import('./content/gui/response-overlay.js');
+  const { TextDetection } = await import('./services/text-detection.js');
+  const { ResponseOverlay } = await import('./gui/response-overlay.js');
 
   // Instanciation des classes
   const textDetection = new TextDetection();

@@ -31,13 +31,13 @@
         "open_in_tab": false
     },
     "background": {
-        "service_worker": "background.js",
+        "service_worker": "background/background.js",
         "type": "module"
     },
     "content_scripts": [
         {
             "matches": ["https://*/*", "http://*/*"],
-            "js": ["content-script.js"],
+            "js": ["content/content-script.js"],
             "type": "module"
         }
     ]
