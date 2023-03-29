@@ -1,5 +1,5 @@
 // Imports
-import { sendOpenAIRequestWithStream } from "./requests/api-request.js";
+import { sendOpenAIRequestWithStream } from "./utils/api-request.js";
 import { createRequest } from "./requests/request-factory.js";
 import { handleError } from "./utils/errors.js";
 import { handleStream } from "./utils/stream.js";
@@ -82,3 +82,7 @@ export async function onOption4Click(info, tab, selectedText, apiKey, aiVersion,
   }
 }
 
+// Fonction pour réagir au clic sur l'option "GPT - Résumer" dans le contexte d'une page entiere
+export async function onOption5Click(info, tab, apiKey, aiVersion, language, apiAddress) {
+  // Votre logique pour traiter l'action de l'option 5
+}

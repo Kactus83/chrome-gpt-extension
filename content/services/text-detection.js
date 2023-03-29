@@ -1,4 +1,3 @@
-// content/services/text-detection.js
 export class TextDetection {
     constructor() {
       this.selectedText = '';

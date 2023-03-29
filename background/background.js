@@ -35,6 +35,14 @@ chrome.runtime.onInstalled.addListener(function() {
     "contexts": ["selection"],
     "enabled": false
   });
+
+  chrome.contextMenus.create({
+    "id": "option-5",
+    "title": "Résumé",
+    "contexts": ["page"],
+    "enabled": true
+  });
+  
 });
 
 
@@ -108,6 +116,18 @@ chrome.contextMenus.onClicked.addListener(function(info, tab) {
       onOption4Click(info, tab, selectedText, apiKey, aiVersion, lang, apiAddress);
     });
   }
+  
+  if (info.menuItemId === "option-5") {
+    getLocalSettings((apiKey, aiVersion, lang, apiAddress) => {
+      // Envoyer un message au content script indiquant que la requête est en cours de traitement
+      chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, {processing: true});
+      });
+  
+      onOption5Click(info, tab, apiKey, aiVersion, lang, apiAddress);
+    });
+  }
+  
 });
 
 function getLocalSettings(callback) {
