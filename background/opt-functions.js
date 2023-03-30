@@ -3,6 +3,7 @@ import { sendOpenAIRequestWithStream } from "./utils/api-request.js";
 import { createRequest } from "./modes/selected-text-modes/request-factory.js";
 import { handleError } from "./utils/errors.js";
 import { handleStream } from "./utils/stream.js";
+import { createPageResumeRequest } from "./modes/page-modes/page-resume/page-resume.js";
 
 
 // Fonction pour réagir au clic sur l'option "GPT - Expliquer"
