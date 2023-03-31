@@ -1,5 +1,5 @@
 // Imports
-import { onOption1Click, onOption2Click, onOption3Click, onOption4Click } from "./opt-functions.js";
+import { onOption1Click, onOption2Click, onOption3Click, onOption4Click, onOption5Click } from "./opt-functions.js";
 
 // Texte selectionné actualisé en temps réel
 var selectedText = '';

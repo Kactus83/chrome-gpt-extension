@@ -1,10 +1,12 @@
 (async () => {
   const { TextDetection } = await import('./services/text-detection.js');
   const { ResponseOverlay } = await import('./gui/response-overlay.js');
+  const { DOMSummarizer } = await import('./services/dom-summarizer.js');
 
   // Instanciation des classes
   const textDetection = new TextDetection();
   const responseOverlay = new ResponseOverlay();
+  const domSummarizer = new DOMSummarizer();
 
   // Écoute la sélection de texte dans le navigateur
   textDetection.observe();
@@ -56,4 +58,12 @@
     var selectedText = textDetection.getSelectedText();
     chrome.runtime.sendMessage({ selectedText: selectedText || '' });
   });
+
+  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.action === 'getDOMSummary') {
+      const domSummary = domSummarizer.getDOMSummary();
+      sendResponse({ domSummary: domSummary });
+    }
+  });
+  
 })();

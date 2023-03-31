@@ -1,14 +1,19 @@
 export async function getDOMContent(tabId) {
-    return new Promise((resolve, reject) => {
-      chrome.tabs.executeScript(tabId, {
-        code: 'document.documentElement.outerHTML',
-      }, ([result] = []) => {
+  return new Promise((resolve, reject) => {
+    chrome.scripting.executeScript(
+      {
+        target: { tabId: tabId },
+        function: function () {
+          return document.documentElement.outerHTML;
+        },
+      },
+      (results) => {
         if (chrome.runtime.lastError) {
           reject(chrome.runtime.lastError);
         } else {
-          resolve(result);
+          resolve(results[0].result);
         }
-      });
-    });
-  }
-  
+      }
+    );
+  });
+}

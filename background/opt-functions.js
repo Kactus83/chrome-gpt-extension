@@ -85,5 +85,6 @@ export async function onOption4Click(info, tab, selectedText, apiKey, aiVersion,
 
 // Fonction pour réagir au clic sur l'option "GPT - Résumer" dans le contexte d'une page entiere
 export async function onOption5Click(info, tab, apiKey, aiVersion, language, apiAddress) {
-  // Votre logique pour traiter l'action de l'option 5
+  console.log("ai version : ", aiVersion);
+  await createPageResumeRequest(tab.id, aiVersion, apiKey, apiAddress);
 }
