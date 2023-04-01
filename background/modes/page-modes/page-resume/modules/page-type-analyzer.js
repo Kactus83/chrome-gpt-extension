@@ -1,4 +1,4 @@
-import { sendOpenAIRequest } from "../../../utils/api-request.js";
+import { sendOpenAIRequest } from "../../../../utils/api-request.js";
 
 class PageTypeAnalyzer {
   constructor(url, apiKey, apiAddress, aiVersion) {
@@ -12,8 +12,8 @@ class PageTypeAnalyzer {
 
   async init() {
     try {
-      const domSummary = await this.getDOMSummaryFromContentScript();
-      const messages = this.createMessages(domSummary);
+      const domExtract = await this.getDOMExtractFromContentScript();
+      const messages = this.createMessages(domExtract);
       const request = {
         model: this.aiVersion,
         messages: messages,
@@ -28,22 +28,22 @@ class PageTypeAnalyzer {
     }
   }
 
-  async getDOMSummaryFromContentScript() {
+  async getDOMExtractFromContentScript() {
     return new Promise((resolve, reject) => {
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         const activeTab = tabs[0];
-        chrome.tabs.sendMessage(activeTab.id, { action: 'getDOMSummary' }, (response) => {
+        chrome.tabs.sendMessage(activeTab.id, { action: 'getDOMExtract' }, (response) => {
           if (chrome.runtime.lastError) {
             reject(chrome.runtime.lastError);
           } else {
-            resolve(response.domSummary);
+            resolve(response.domExtract);
           }
         });
       });
     });
   }
 
-  createMessages(domSummary) {
+  createMessages(domExtract) {
     return [
       {
         role: "system",
@@ -52,7 +52,7 @@ class PageTypeAnalyzer {
       },
       {
         role: "user",
-        content: `Analyze the following website and provide its category and page type strictly in this format: {site category} | {page type}. Note that a script will analyze the response, so please ensure the category and page type are enclosed in curly braces and separated by a pipe character. The URL is ${this.url}. Here's a snippet of its DOM content: ${domSummary.slice(0, 100)}...`,
+        content: `Analyze the following website and provide its category and page type strictly in this format: {site category} | {page type}. Note that a script will analyze the response, so please ensure the category and page type are enclosed in curly braces and separated by a pipe character. The URL is ${this.url}. Here's a snippet of its DOM content: ${domExtract.slice(0, 100)}...`,
       },
     ];
   }

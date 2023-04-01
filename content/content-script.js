@@ -60,6 +60,10 @@
   });
 
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.action === 'getDOMExtract') {
+      const domExtract = domSummarizer.getDOMExtract();
+      sendResponse({ domExtract: domExtract });
+    }
     if (request.action === 'getDOMSummary') {
       const domSummary = domSummarizer.getDOMSummary();
       sendResponse({ domSummary: domSummary });
