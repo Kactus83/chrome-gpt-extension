@@ -4,20 +4,20 @@ import PageCodeAnalyzer from "./modules/page-code-analyzer.js";
 export async function createPageResumeRequest(tabId, aiVersion, apiKey, apiAddress) {
   try {
     // Récupérer l'URL de la page courante et son DOM content
-    const { url } = await new Promise((resolve) => {
+    const { url, tab } = await new Promise((resolve) => {
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        resolve({ url: tabs[0].url });
+        resolve({ url: tabs[0].url, tab: tabs[0] });
       });
     });
 
     // Utiliser l'instance de la classe d'analyse
-    const pageTypeAnalyzer = new PageTypeAnalyzer(url, apiKey, apiAddress, aiVersion);
+    const pageTypeAnalyzer = new PageTypeAnalyzer(tab, url, apiKey, apiAddress, aiVersion);
     await pageTypeAnalyzer.init();
     const pageType = pageTypeAnalyzer.getPageType();
     const category = pageTypeAnalyzer.getSiteCategory();
 
     // Créer une instance de PageCodeAnalyzer avec les arguments supplémentaires
-    const pageCodeAnalyzer = new PageCodeAnalyzer(url, category, pageType, apiKey, apiAddress, aiVersion);
+    const pageCodeAnalyzer = new PageCodeAnalyzer(tab, url, category, pageType, apiKey, apiAddress, aiVersion);
     await pageCodeAnalyzer.init();
 
     // Afficher le résultat dans la console

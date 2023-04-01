@@ -1,7 +1,8 @@
 import { sendOpenAIRequest } from "../../../../utils/api-request.js";
 
 class PageTypeAnalyzer {
-  constructor(url, apiKey, apiAddress, aiVersion) {
+  constructor(tab, url, apiKey, apiAddress, aiVersion) {
+    this.tab = tab;
     this.url = url;
     this.apiKey = apiKey;
     this.apiAddress = apiAddress;
@@ -20,8 +21,6 @@ class PageTypeAnalyzer {
       };
 
       const response = await sendOpenAIRequest(this.apiKey, this.apiAddress, request);
-      console.log("api key : ", this.apiKey);
-      console.log(response);
       this.processResponse(response);
     } catch (error) {
       console.error("Error in PageTypeAnalyzer:", error);
@@ -30,15 +29,12 @@ class PageTypeAnalyzer {
 
   async getDOMExtractFromContentScript() {
     return new Promise((resolve, reject) => {
-      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        const activeTab = tabs[0];
-        chrome.tabs.sendMessage(activeTab.id, { action: 'getDOMExtract' }, (response) => {
-          if (chrome.runtime.lastError) {
-            reject(chrome.runtime.lastError);
-          } else {
-            resolve(response.domExtract);
-          }
-        });
+      chrome.tabs.sendMessage(this.tab.id, { action: 'getDOMExtract' }, (response) => {
+        if (chrome.runtime.lastError) {
+          reject(chrome.runtime.lastError);
+        } else {
+          resolve(response.domExtract);
+        }
       });
     });
   }

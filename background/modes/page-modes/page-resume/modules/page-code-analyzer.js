@@ -1,7 +1,8 @@
 import { sendOpenAIRequest } from "../../../../utils/api-request.js";
 
 class PageCodeAnalyzer {
-  constructor(url, siteCategory, pageType, apiKey, apiAddress, aiVersion) {
+  constructor(tab, url, siteCategory, pageType, apiKey, apiAddress, aiVersion) {
+    this.tab = tab;
     this.url = url;
     this.siteCategory = siteCategory;
     this.pageType = pageType;
@@ -20,8 +21,6 @@ class PageCodeAnalyzer {
       };
   
       const response = await sendOpenAIRequest(this.apiKey, this.apiAddress, request);
-      console.log("api key : ", this.apiKey);
-      console.log(response);
       this.processResponse(response);
     } catch (error) {
       console.error("Error in PageCodeAnalyzer:", error);
@@ -30,16 +29,13 @@ class PageCodeAnalyzer {
 
   async getDOMSummaryFromContentScript() {
     return new Promise((resolve, reject) => {
-      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        const activeTab = tabs[0];
-        chrome.tabs.sendMessage(activeTab.id, { action: 'getDOMSummary' }, (response) => {
-          if (chrome.runtime.lastError) {
-            reject(chrome.runtime.lastError);
-          } else {
-            resolve(response.domSummary);
-          }
-        });
-      });
+      chrome.tabs.sendMessage(this.tab.id, { action: 'getDOMSummary' }, (response) => {
+        if (chrome.runtime.lastError || !response) {
+          reject(chrome.runtime.lastError || new Error('Undefined response'));
+        } else {
+          resolve(response.domSummary);
+        }
+      });        
     });
   }
 
