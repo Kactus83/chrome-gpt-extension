@@ -21,6 +21,7 @@ class PageCodeAnalyzer {
       };
   
       const response = await sendOpenAIRequest(this.apiKey, this.apiAddress, request);
+      console.log(response);
       this.processResponse(response);
     } catch (error) {
       console.error("Error in PageCodeAnalyzer:", error);

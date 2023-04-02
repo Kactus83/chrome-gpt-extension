@@ -20,6 +20,7 @@ class PageTypeAnalyzer {
         messages: messages,
       };
 
+      console.log(domExtract);
       const response = await sendOpenAIRequest(this.apiKey, this.apiAddress, request);
       this.processResponse(response);
     } catch (error) {
